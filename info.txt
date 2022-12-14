@@ -1,0 +1,21 @@
+Info
+
+tutorial: https://www.udemy.com/course/nextjs-react-the-complete-guide/learn/lecture/25146394#content
+
+github: https://github.com/radu-alin/next-js-authentication.git
+
+app: auth-demo
+
+github 
+…or create a new repository on the command line
+echo "# next-js-authentication" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/radu-alin/next-js-authentication.git
+git push -u origin main
+…or push an existing repository from the command line
+git remote add origin https://github.com/radu-alin/next-js-authentication.git
+git branch -M main
+git push -u origin main
