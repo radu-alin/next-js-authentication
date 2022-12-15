@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 import { verifyPassword } from '../../../lib/auth';
-import { checkExistingUserByEmail, connectDatabase } from '../../../lib/db-util';
+import { findUserByEmail, connectDatabase } from '../../../lib/db-util';
 
 export default NextAuth({
   session: {
@@ -22,16 +22,16 @@ export default NextAuth({
         const db = client.db();
 
         // check if user exists
-        const user = await checkExistingUserByEmail(db, 'users', email);
+        const user = await findUserByEmail(db, 'users', email);
         if (!user) {
           client.close();
-          throw new Error('Invalid credentials!user');
+          throw new Error('Invalid credentials!');
         }
 
         // check user password
         const isValidUser = await verifyPassword(password, user.password);
         if (!isValidUser) {
-          throw new Error('Invalid credentials!password');
+          throw new Error('Invalid credentials!');
         }
 
         client.close();

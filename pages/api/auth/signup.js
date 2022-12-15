@@ -1,9 +1,5 @@
 import { getHashPassword } from '../../../lib/auth';
-import {
-  checkExistingUserByEmail,
-  connectDatabase,
-  insertDocument,
-} from '../../../lib/db-util';
+import { findUserByEmail, connectDatabase, insertDocument } from '../../../lib/db-util';
 
 const checkIsValidData = (email, password) =>
   email && email.includes('@') && password && password.trim().length >= 7;
@@ -12,7 +8,6 @@ async function handler(req, res) {
   // check if request is of type "POST"
   if (req.method !== 'POST') {
     res.status(400).json({ message: 'Bad request' });
-    client.close();
     return;
   }
 
@@ -38,7 +33,7 @@ async function handler(req, res) {
   const db = client.db();
 
   // check if user exists
-  const existingUser = await checkExistingUserByEmail(db, 'users', email);
+  const existingUser = await findUserByEmail(db, 'users', email);
   if (existingUser) {
     res.status(422).json({ message: 'User already exists.' });
     client.close();
@@ -48,8 +43,7 @@ async function handler(req, res) {
   // create new user
   const hashedPassword = await getHashPassword(password);
   const credentials = { email, password: hashedPassword };
-  const result = await insertDocument(db, 'users', credentials);
-  console.log('%c-> developmentConsole: result= ', 'color:#77dcfd', result);
+  await insertDocument(db, 'users', credentials);
 
   res.status(201).json({ message: 'User created!' });
   client.close();
